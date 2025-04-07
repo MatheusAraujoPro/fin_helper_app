@@ -1,0 +1,30 @@
+CREATE TABLE transactions (
+  transaction_id INTEGER PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  type INTEGER NOT NULL,
+  value REAL NOT NULL,
+  createdAt TEXT NOT NULL,
+  incomeType INTEGER NOT NULL
+);
+
+-- Foi preciso forçar as tipagens com o as para funfar(Loucura)
+
+selectAllTransactions:
+SELECT
+    transaction_id AS transaction_id,
+    name AS name,
+    type AS type,
+    value AS value,
+    createdAt AS createdAt,
+    incomeType AS incomeType
+FROM transactions;
+
+insertTransaction:
+INSERT INTO transactions (name, type, value, createdAt, incomeType)
+VALUES (?, ?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM transactions;
+
+deleteById:
+DELETE FROM transactions WHERE transaction_id = ?;

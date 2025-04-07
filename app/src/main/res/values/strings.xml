@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">fin_helper_app</string>
+    <string name="top_bar_transactions">Transanções</string>
+    <string name="top_bar_items_plural">%s Items</string>
+    <string name="top_bar_items_singular">%s Item</string>
+    <string name="new_transaction">Nova Transação</string>
+    <string name="revenue_text">Entrada</string>
+    <string name="expense_text">Saída</string>
+    <string name="bottom_sheet_action_button_title">Cadastrar</string>
+    <string name="free_balance">Saldo Livre</string>
+    <string name="genial_balance">Saldo no Cartão Genial</string>
+    <string name="nubank_balance">Saldo no Cartão Nubank</string>
+    <string name="account_balance">"Saldo de Investimentos"</string>
+
+    <string name="snackbar_revenue_message">Entrada cadastrada com sucesso!</string>
+    <string name="snackbar_expense_message">Saída cadastrada com sucesso!</string>
+    <string name="snackbar_revenue_message_alter">Entrada deletada com sucesso!</string>
+    <string name="snackbar_expense_message_alter">Saída deletada com sucesso!</string>
+    <string name="snackbar_confirmation_button">ok</string>
+
+    <string name="description_placehoulder">Descrição</string>
+    <string name="price_placeholder">Preço</string>
+</resources>
