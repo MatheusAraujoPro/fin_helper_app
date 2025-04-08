@@ -10,7 +10,10 @@ class DeleteTransactionByIdUseCase @Inject constructor(
     scope: CoroutineScope
 ) : UseCase<Unit, DeleteTransactionByIdUseCase.Params>(scope) {
 
-    override fun run(params: Params?) = transactionRepository.deleteById(params?.id ?: 0L)
+    override fun run(params: Params?) = when (params?.id) {
+        null -> throw NullPointerException()
+        else -> transactionRepository.deleteById(params.id)
+    }
 
     data class Params(
         val id: Long
