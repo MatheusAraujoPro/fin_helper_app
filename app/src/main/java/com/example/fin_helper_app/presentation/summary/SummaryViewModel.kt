@@ -3,12 +3,11 @@ package com.example.fin_helper_app.presentation.summary
 import androidx.lifecycle.ViewModel
 import com.example.fin_helper_app.domain.enums.IncomeType
 import com.example.fin_helper_app.domain.model.TransactionModel
-import com.example.fin_helper_app.domain.usecase.DeleteAllTransactionUseCase
 import com.example.fin_helper_app.domain.usecase.DeleteTransactionByIdUseCase
+import com.example.fin_helper_app.domain.usecase.EditTransactionUseCase
 import com.example.fin_helper_app.domain.usecase.GetTransactionsUseCase
 import com.example.fin_helper_app.domain.usecase.StoreTransactionUseCase
 import com.example.fin_helper_app.ui.components.TransactionType
-import com.example.fin_helper_app.ui.model.HeaderCardModel
 import com.example.fin_helper_app.ui.model.HeaderCardType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class SummaryViewModel @Inject constructor(
     private val getTransactionsUseCase: GetTransactionsUseCase,
     private val storeTransactionUseCase: StoreTransactionUseCase,
-    private val deleteAllTransactionUseCase: DeleteAllTransactionUseCase,
+    private val editTransactionUseCase: EditTransactionUseCase,
     private val deleteTransactionByIdUseCase: DeleteTransactionByIdUseCase
 ) : ViewModel() {
 
@@ -36,10 +35,10 @@ class SummaryViewModel @Inject constructor(
         when (action) {
             is SummaryScreenAction.SaveTransaction -> saveTransaction(action.model)
             is SummaryScreenAction.DeleteTransactionById -> deleteById(action.transactionId)
+            is SummaryScreenAction.EditTransaction -> editTransaction(action.model)
 
             SummaryScreenAction.GetTransactions -> getTransactions()
             SummaryScreenAction.ShouldShowBottomSheet -> shouldShowBottomSheet()
-            SummaryScreenAction.DeleteTransaction -> deleteAll()
         }
     }
 
@@ -67,10 +66,6 @@ class SummaryViewModel @Inject constructor(
                 )
             }
         )
-    }
-
-    private fun deleteAll() {
-        deleteAllTransactionUseCase()
     }
 
     private fun deleteById(id: Long) {
@@ -113,6 +108,25 @@ class SummaryViewModel @Inject constructor(
                     error = it,
                     isLoading = false
                 )
+            }
+        )
+    }
+
+    private fun editTransaction(model: TransactionModel) {
+        _state.value = _state.value.copy(
+            isLoading = true,
+            transactionsList = listOf()
+        )
+
+        editTransactionUseCase(
+            EditTransactionUseCase.Params(
+                model = model
+            ),
+            onSuccess = {
+                _state.value = _state.value.copy(
+                    isLoading = false
+                )
+                getTransactions()
             }
         )
     }
