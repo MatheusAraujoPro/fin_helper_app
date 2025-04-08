@@ -28,3 +28,8 @@ DELETE FROM transactions;
 
 deleteById:
 DELETE FROM transactions WHERE transaction_id = ?;
+
+editTransaction:
+UPDATE transactions SET
+name = ?, type = ?, value = ?, createdAt = ?, incomeType = ?
+WHERE transaction_id = ?;

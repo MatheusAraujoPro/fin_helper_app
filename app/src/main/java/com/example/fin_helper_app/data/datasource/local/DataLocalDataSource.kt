@@ -1,6 +1,5 @@
 package com.example.fin_helper_app.data.datasource.local
 
-import androidx.compose.runtime.traceEventStart
 import com.example.fin_helper_app.data.model.TransactionsMapper
 import com.example.fin_helper_app.domain.enums.IncomeType
 import com.example.fin_helper_app.domain.model.TransactionModel
@@ -26,7 +25,6 @@ class DataLocalDataSource(
                 incomeType = IncomeType.value(transaction.incomeType.value)?.value?.toLong() ?: 0L,
                 type = TransactionType.value(transaction.type.value)?.value?.toLong() ?: 0L,
                 createdAt = transaction.createdAt
-
             )
         )
     }
@@ -39,5 +37,19 @@ class DataLocalDataSource(
     fun deleteById(id: Long) = flow {
         val result = transactionsDataBase.transactionsQueries.deleteById(id)
         emit(result)
+    }
+
+    fun editTransaction(transaction: TransactionModel) = flow {
+        val result = transaction.id?.let {
+            transactionsDataBase.transactionsQueries.editTransaction(
+                name = transaction.name,
+                value_ = transaction.value,
+                createdAt = transaction.createdAt,
+                incomeType = IncomeType.value(transaction.incomeType.value)?.value?.toLong() ?: 0L,
+                type = TransactionType.value(transaction.type.value)?.value?.toLong() ?: 0L,
+                transaction_id = it
+            )
+        }
+        emit(result!!)
     }
 }
