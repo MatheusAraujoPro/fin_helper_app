@@ -1,4 +1,4 @@
-package com.example.fin_helper_app.presentation.summary
+package com.example.fin_helper_app.presentation.summary.bottomsheet
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
