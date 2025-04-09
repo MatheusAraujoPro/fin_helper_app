@@ -1,5 +1,6 @@
 package com.example.fin_helper_app.ui.components
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -50,6 +51,7 @@ import com.example.fin_helper_app.helper.asCurrency
 import com.example.fin_helper_app.ui.theme.ignitedBrandRed
 import com.example.fin_helper_app.ui.theme.ignitedMidGreen
 import kotlinx.coroutines.delay
+import kotlin.math.log
 
 @Composable
 fun TransactionCard(
@@ -174,6 +176,7 @@ fun <T> SwipeToDeleteContainer(
     animationDuration: Int = 500,
     content: @Composable (T) -> Unit
 ) {
+    val factorToSwipeTriggerTheDeleteAction = 1.5f
     var isRemoved by remember {
         mutableStateOf(false)
     }
@@ -185,6 +188,9 @@ fun <T> SwipeToDeleteContainer(
             } else {
                 false
             }
+        },
+        positionalThreshold = {
+            it.div(factorToSwipeTriggerTheDeleteAction)
         }
     )
 
@@ -207,6 +213,7 @@ fun <T> SwipeToDeleteContainer(
             backgroundContent = {
                 DeleteBackground(swipeDismissState = state)
             },
+            enableDismissFromStartToEnd = false,
             content = { content(item) },
         )
     }
