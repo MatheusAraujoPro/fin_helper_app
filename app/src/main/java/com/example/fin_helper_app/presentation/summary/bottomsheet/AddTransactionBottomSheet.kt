@@ -123,7 +123,7 @@ fun BottomSheetForm(
         placeholder = stringResource(R.string.price_placeholder),
         textFieldType = TextFieldType.NUMBER,
         onChange = {
-            priceText = it
+            priceText = it.replace(",", ".")
         }
     )
     Spacer(modifier = Modifier.height(16.dp))
