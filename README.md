@@ -15,19 +15,10 @@ It is a kind of expenses tracker app that was made specifcly for my finance life
 - Clean Architecture - To connenct presentation to other app's layers
 
 ## Show Cases
-### App Launch
-https://github.com/user-attachments/assets/484f1e55-6b24-4159-8516-dd8941fc67da
+Here i'll provide some videos that show how it works!
+  
+## How to run the project
+Here i'll provide informations about how you can run the app at your environment!
 
-### App in Use
-https://github.com/user-attachments/assets/c9aedb9c-2e6e-4a4b-8d1c-522a7553d87c
-
-
-
-
-
-
-
-
-
-
-
+## RoadMap
+Here i'll provide informations about how the project will evolve over time!
