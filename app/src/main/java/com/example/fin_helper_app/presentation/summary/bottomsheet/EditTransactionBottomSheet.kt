@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fin_helper_app.R
 import com.example.fin_helper_app.domain.enums.IncomeType
+import com.example.fin_helper_app.domain.enums.Language
 import com.example.fin_helper_app.domain.model.TransactionModel
 import com.example.fin_helper_app.helper.getDayMonthAndYear
 import com.example.fin_helper_app.ui.components.CustomTextField
@@ -51,6 +52,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTransactionBottomSheet(
+    language: Language,
     bottomSheetState: SheetState,
     transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit,
@@ -64,6 +66,7 @@ fun EditTransactionBottomSheet(
         }
     ) {
         BottomSheetContent(
+            language = language,
             transaction = transaction,
             onActionClick = onActionClick,
             onCloseClick = onCloseClick
@@ -73,6 +76,7 @@ fun EditTransactionBottomSheet(
 
 @Composable
 private fun BottomSheetContent(
+    language: Language,
     transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit,
     onCloseClick: () -> Unit
@@ -85,6 +89,7 @@ private fun BottomSheetContent(
         )
         Spacer(modifier = Modifier.height(32.dp))
         BottomSheetForm(
+            language = language,
             transaction = transaction,
             onActionClick = onActionClick,
         )
@@ -93,6 +98,7 @@ private fun BottomSheetContent(
 
 @Composable
 private fun BottomSheetForm(
+    language: Language,
     transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit
 ) {
@@ -102,7 +108,10 @@ private fun BottomSheetForm(
     var buttonSelected by remember { mutableIntStateOf(transactionType.value) }
 
     CustomTextField(
-        inputText = transaction.incomeType.description,
+        inputText = if (transaction.incomeType == IncomeType.BALANCE && language == Language.EN_US)
+            transaction.incomeType.alternativeDescription.orEmpty()
+        else
+            transaction.incomeType.description,
         placeholder = "",
         isEnable = false,
         onChange = {}

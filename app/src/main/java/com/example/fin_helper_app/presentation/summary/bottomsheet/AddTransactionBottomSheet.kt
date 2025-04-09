@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fin_helper_app.R
 import com.example.fin_helper_app.domain.enums.IncomeType
+import com.example.fin_helper_app.domain.enums.Language
 import com.example.fin_helper_app.domain.model.TransactionModel
 import com.example.fin_helper_app.helper.getDayMonthAndYear
 import com.example.fin_helper_app.ui.components.CustomTextField
@@ -51,6 +52,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionBottomSheet(
+    language: Language,
     bottomSheetState: SheetState,
     incomeType: IncomeType,
     onActionClick: (transaction: TransactionModel) -> Unit,
@@ -64,6 +66,7 @@ fun AddTransactionBottomSheet(
         }
     ) {
         BottomSheetContent(
+            language = language,
             incomeType = incomeType,
             onActionClick = onActionClick,
             onCloseClick = onCloseClick
@@ -73,6 +76,7 @@ fun AddTransactionBottomSheet(
 
 @Composable
 private fun BottomSheetContent(
+    language: Language,
     incomeType: IncomeType,
     onActionClick: (transaction: TransactionModel) -> Unit,
     onCloseClick: () -> Unit
@@ -85,6 +89,7 @@ private fun BottomSheetContent(
         )
         Spacer(modifier = Modifier.height(32.dp))
         BottomSheetForm(
+            language = language,
             incomeType = incomeType,
             onActionClick = onActionClick,
         )
@@ -93,6 +98,7 @@ private fun BottomSheetContent(
 
 @Composable
 fun BottomSheetForm(
+    language: Language,
     incomeType: IncomeType,
     onActionClick: (transaction: TransactionModel) -> Unit
 ) {
@@ -103,7 +109,10 @@ fun BottomSheetForm(
     val createdAt = Date().getDayMonthAndYear()
 
     CustomTextField(
-        inputText = incomeType.description,
+        inputText = if (incomeType == IncomeType.BALANCE && language == Language.EN_US)
+            incomeType.alternativeDescription.orEmpty()
+        else
+            incomeType.description,
         placeholder = "",
         isEnable = false,
         onChange = {}

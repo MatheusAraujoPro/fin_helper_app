@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.fin_helper_app.R
 import com.example.fin_helper_app.domain.enums.IncomeType
+import com.example.fin_helper_app.domain.enums.Language
 import com.example.fin_helper_app.domain.model.TransactionModel
 import com.example.fin_helper_app.ui.components.TransactionCard
 import com.example.fin_helper_app.ui.components.TransactionType
@@ -103,6 +104,7 @@ fun BackgroundWrapper(
 fun TransactionsCardList(
     transactions: List<TransactionModel>,
     filteredTransactions: List<TransactionModel>,
+    language: Language,
     onCardTap: (transaction: TransactionModel) -> Unit,
     onDelete: (transactionId: Long, transactionType: TransactionType) -> Unit
 ) {
@@ -113,13 +115,14 @@ fun TransactionsCardList(
             items(filteredTransactions) { transaction ->
                 TransactionCard(
                     transactionModel = transaction,
+                    language = language,
                     onCardTap = {
                         onCardTap.invoke(transaction)
 
                     },
                     onDelete = {
                         transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type!!)
+                            onDelete.invoke(id, transaction.type)
                         }
                     }
                 )
@@ -129,12 +132,13 @@ fun TransactionsCardList(
             items(transactions) { transaction ->
                 TransactionCard(
                     transactionModel = transaction,
+                    language = language,
                     onCardTap = {
                         onCardTap.invoke(transaction)
                     },
                     onDelete = {
                         transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type!!)
+                            onDelete.invoke(id, transaction.type)
                         }
                     }
                 )

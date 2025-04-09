@@ -1,6 +1,5 @@
 package com.example.fin_helper_app.ui.components
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -46,16 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fin_helper_app.R
 import com.example.fin_helper_app.domain.enums.IncomeType
+import com.example.fin_helper_app.domain.enums.Language
 import com.example.fin_helper_app.domain.model.TransactionModel
 import com.example.fin_helper_app.helper.asCurrency
 import com.example.fin_helper_app.ui.theme.ignitedBrandRed
 import com.example.fin_helper_app.ui.theme.ignitedMidGreen
 import kotlinx.coroutines.delay
-import kotlin.math.log
 
 @Composable
 fun TransactionCard(
     transactionModel: TransactionModel,
+    language: Language,
     onCardTap: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -85,7 +85,8 @@ fun TransactionCard(
                     incomeType = transactionModel.incomeType,
                     date = transactionModel.createdAt,
                     value = transactionModel.value,
-                    transactionType = transactionModel.type
+                    transactionType = transactionModel.type,
+                    language = language
                 )
             }
         }
@@ -99,7 +100,8 @@ private fun CardContent(
     incomeType: IncomeType,
     date: String,
     value: Double,
-    transactionType: TransactionType
+    transactionType: TransactionType,
+    language: Language
 ) {
     Column(
         modifier = Modifier.padding(24.dp)
@@ -139,7 +141,10 @@ private fun CardContent(
             )
 
             Text(
-                text = incomeType.description,
+                text = if (incomeType == IncomeType.BALANCE && language == Language.EN_US)
+                    incomeType.alternativeDescription.orEmpty()
+                else
+                    incomeType.description,
                 color = Color.White,
                 fontSize = 24.sp
             )
@@ -284,6 +289,7 @@ fun TransactionCardPreview() {
                 incomeType = IncomeType.NUBANK,
                 createdAt = "12/03/2025"
             ),
+            language = Language.PT_BR,
             onCardTap = {},
             onDelete = {}
 
@@ -297,6 +303,7 @@ fun TransactionCardPreview() {
                 incomeType = IncomeType.GENIAL,
                 createdAt = "12/03/2025"
             ),
+            language = Language.PT_BR,
             onCardTap = {},
             onDelete = {}
         )
