@@ -1,4 +1,4 @@
-package com.example.fin_helper_app.presentation.summary
+package com.example.fin_helper_app.presentation.summary.bottomsheet
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -50,9 +50,9 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransactionBottomSheet(
+fun EditTransactionBottomSheet(
     bottomSheetState: SheetState,
-    incomeType: IncomeType,
+    transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit,
     onCloseClick: () -> Unit
 ) {
@@ -64,7 +64,7 @@ fun AddTransactionBottomSheet(
         }
     ) {
         BottomSheetContent(
-            incomeType = incomeType,
+            transaction = transaction,
             onActionClick = onActionClick,
             onCloseClick = onCloseClick
         )
@@ -73,7 +73,7 @@ fun AddTransactionBottomSheet(
 
 @Composable
 private fun BottomSheetContent(
-    incomeType: IncomeType,
+    transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit,
     onCloseClick: () -> Unit
 ) {
@@ -85,25 +85,24 @@ private fun BottomSheetContent(
         )
         Spacer(modifier = Modifier.height(32.dp))
         BottomSheetForm(
-            incomeType = incomeType,
+            transaction = transaction,
             onActionClick = onActionClick,
         )
     }
 }
 
 @Composable
-fun BottomSheetForm(
-    incomeType: IncomeType,
+private fun BottomSheetForm(
+    transaction: TransactionModel,
     onActionClick: (transaction: TransactionModel) -> Unit
 ) {
-    var descriptionText by remember { mutableStateOf("") }
-    var priceText by remember { mutableStateOf("") }
-    var transactionType by remember { mutableStateOf(TransactionType.REVENUE) }
+    var descriptionText by remember { mutableStateOf(transaction.name) }
+    var priceText by remember { mutableStateOf(transaction.value.toString()) }
+    var transactionType by remember { mutableStateOf(transaction.type) }
     var buttonSelected by remember { mutableIntStateOf(transactionType.value) }
-    val createdAt = Date().getDayMonthAndYear()
 
     CustomTextField(
-        inputText = incomeType.description,
+        inputText = transaction.incomeType.description,
         placeholder = "",
         isEnable = false,
         onChange = {}
@@ -153,11 +152,12 @@ fun BottomSheetForm(
         enabled = isEnable(descriptionText = descriptionText, priceText = priceText),
         onClick = {
             val transactionModel = TransactionModel(
+                id = transaction.id,
                 name = descriptionText,
                 value = priceText.toDouble(),
                 type = transactionType,
-                createdAt = createdAt,
-                incomeType = incomeType
+                createdAt = transaction.createdAt,
+                incomeType = transaction.incomeType
             )
             onActionClick.invoke(
                 transactionModel
@@ -165,7 +165,7 @@ fun BottomSheetForm(
         }
     ) {
         Text(
-            text = stringResource(R.string.bottom_sheet_action_button_title),
+            text = stringResource(R.string.bottom_sheet_action_button_title_alternative),
             color = Color.White,
             fontSize = 16.sp,
             modifier = Modifier.padding(vertical = 8.dp)
@@ -182,7 +182,7 @@ private fun BottomSheetHeader(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.new_transaction),
+            text = stringResource(R.string.edit_transaction),
             color = Color.White,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold

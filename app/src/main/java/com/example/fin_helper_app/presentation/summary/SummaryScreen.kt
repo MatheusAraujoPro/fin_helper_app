@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.example.fin_helper_app.domain.enums.IncomeType
 import com.example.fin_helper_app.domain.model.TransactionModel
+import com.example.fin_helper_app.presentation.summary.bottomsheet.AddTransactionBottomSheet
+import com.example.fin_helper_app.presentation.summary.bottomsheet.EditTransactionBottomSheet
 import com.example.fin_helper_app.presentation.summary.components.BackgroundWrapper
 import com.example.fin_helper_app.presentation.summary.components.FloatingOrbitalMenu
 import com.example.fin_helper_app.presentation.summary.components.SnackBarActionType
@@ -39,7 +41,10 @@ import kotlinx.coroutines.launch
 fun SummaryScreen(viewModel: SummaryViewModel) {
     val state = viewModel.state.collectAsState()
     val action = viewModel::dispatcherAction
-    val sheetState = rememberModalBottomSheetState(
+    val addBottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val editBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
     val scope = rememberCoroutineScope()
@@ -50,6 +55,7 @@ fun SummaryScreen(viewModel: SummaryViewModel) {
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var floatOrbitalAreaExpanded by remember { mutableStateOf(false) }
+    var transactionToEdit by remember { mutableStateOf(TransactionModel()) }
 
 
     Scaffold(
@@ -94,6 +100,10 @@ fun SummaryScreen(viewModel: SummaryViewModel) {
                         TransactionsCardList(
                             transactions = state.value.transactionsList,
                             filteredTransactions = filteredTransactions,
+                            onCardTap = {
+                                transactionToEdit = it
+                                action(SummaryScreenAction.ShouldShowEditBottomSheet)
+                            },
                             onDelete = { transactionId, transactionType ->
                                 action(SummaryScreenAction.DeleteTransactionById(transactionId))
                                 filteredTransactions = mutableListOf()
@@ -114,29 +124,62 @@ fun SummaryScreen(viewModel: SummaryViewModel) {
 
                         if (state.value.shouldShowBottomSheet)
                             AddTransactionBottomSheet(
-                                bottomSheetState = sheetState,
+                                bottomSheetState = addBottomSheetState,
                                 incomeType = IncomeType.value(incomeTypeSelected)!!,
                                 onActionClick = {
                                     action(SummaryScreenAction.SaveTransaction(model = it))
                                     keyboardController?.hide()
                                     scope.launch {
-                                        sheetState.hide()
+                                        addBottomSheetState.hide()
                                         delay(500L)
-                                        handleSnackBar(
-                                            context = context,
-                                            snackBarHostState = snackBarHostState,
-                                            message = decideSnackBarMessage(
-                                                transactionType = it.type,
+                                        it.type.let { type ->
+                                            handleSnackBar(
                                                 context = context,
-                                                actionType = SnackBarActionType.ADD
+                                                snackBarHostState = snackBarHostState,
+                                                message = decideSnackBarMessage(
+                                                    transactionType = type,
+                                                    context = context,
+                                                    actionType = SnackBarActionType.ADD
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 },
                                 onCloseClick = {
                                     action(SummaryScreenAction.ShouldShowBottomSheet)
                                     scope.launch {
-                                        sheetState.hide()
+                                        addBottomSheetState.hide()
+                                    }
+                                }
+                            )
+
+                        if (state.value.shouldShowEditBottomSheet)
+                            EditTransactionBottomSheet(
+                                bottomSheetState = addBottomSheetState,
+                                transaction = transactionToEdit,
+                                onActionClick = {
+                                    action(SummaryScreenAction.EditTransaction(model = it))
+                                    keyboardController?.hide()
+                                    scope.launch {
+                                        editBottomSheetState.hide()
+                                        delay(500L)
+                                        it.type.let { type ->
+                                            handleSnackBar(
+                                                context = context,
+                                                snackBarHostState = snackBarHostState,
+                                                message = decideSnackBarMessage(
+                                                    transactionType = type,
+                                                    context = context,
+                                                    actionType = SnackBarActionType.EDIT
+                                                )
+                                            )
+                                        }
+                                    }
+                                },
+                                onCloseClick = {
+                                    action(SummaryScreenAction.ShouldShowEditBottomSheet)
+                                    scope.launch {
+                                        editBottomSheetState.hide()
                                     }
                                 }
                             )

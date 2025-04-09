@@ -8,4 +8,5 @@ interface TransactionRepository {
     fun storeTransaction(model: TransactionModel): Flow<Unit>
     fun deleteAll(): Flow<Unit>
     fun deleteById(id: Long): Flow<Unit>
+    fun editTransaction(model: TransactionModel): Flow<Unit>
 }
