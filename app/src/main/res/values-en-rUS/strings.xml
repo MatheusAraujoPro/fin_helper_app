@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fin_helper_app</string>
+    <string name="top_bar_transactions">Transactions</string>
+    <string name="top_bar_items_plural">%s Items</string>
+    <string name="top_bar_items_singular">%s Item</string>
+    <string name="new_transaction">New Transaction</string>
+    <string name="revenue_text">Revenue</string>
+    <string name="expense_text">Expense</string>
+    <string name="bottom_sheet_action_button_title">Save</string>
+    <string name="bottom_sheet_action_button_title_alternative">Edit</string>
+    <string name="free_balance">Free Balance</string>
+    <string name="genial_balance">Genial Card Balance</string>
+    <string name="nubank_balance">Nubank Card Balance</string>
+    <string name="account_balance">"Investiments Balance"</string>
+
+    <string name="snackbar_revenue_message">Revenue saved with success!</string>
+    <string name="snackbar_expense_message">Expense saved with success!</string>
+    <string name="snackbar_revenue_message_alter">Revenue deleted with success!</string>
+    <string name="snackbar_expense_message_alter">Expense deleted with success!</string>
+    <string name="snackbar_revenue_message_edit">Revenue edited with success!</string>
+    <string name="snackbar_expense_message_edit">Expense edited with success!</string>
+    <string name="snackbar_confirmation_button">OK</string>
+
+    <string name="description_placehoulder">Description</string>
+    <string name="price_placeholder">Price</string>
+    <string name="edit_transaction">Edit Transaction</string>
+</resources>
