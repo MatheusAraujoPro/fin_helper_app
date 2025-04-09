@@ -9,4 +9,5 @@ sealed class SummaryScreenAction {
 
     data object GetTransactions : SummaryScreenAction()
     data object ShouldShowBottomSheet : SummaryScreenAction()
+    data object ShouldShowEditBottomSheet : SummaryScreenAction()
 }

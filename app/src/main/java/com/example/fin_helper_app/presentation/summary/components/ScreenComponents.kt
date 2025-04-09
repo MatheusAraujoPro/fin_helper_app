@@ -65,6 +65,12 @@ fun decideSnackBarMessage(
         ) else context.getString(
             R.string.snackbar_expense_message_alter
         )
+
+        SnackBarActionType.EDIT -> if (transactionType == TransactionType.REVENUE) context.getString(
+            R.string.snackbar_revenue_message_edit
+        ) else context.getString(
+            R.string.snackbar_expense_message_edit
+        )
     }
 }
 
@@ -97,6 +103,7 @@ fun BackgroundWrapper(
 fun TransactionsCardList(
     transactions: List<TransactionModel>,
     filteredTransactions: List<TransactionModel>,
+    onCardTap: (transaction: TransactionModel) -> Unit,
     onDelete: (transactionId: Long, transactionType: TransactionType) -> Unit
 ) {
     LazyColumn(
@@ -106,9 +113,13 @@ fun TransactionsCardList(
             items(filteredTransactions) { transaction ->
                 TransactionCard(
                     transactionModel = transaction,
+                    onCardTap = {
+                        onCardTap.invoke(transaction)
+
+                    },
                     onDelete = {
                         transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type)
+                            onDelete.invoke(id, transaction.type!!)
                         }
                     }
                 )
@@ -118,9 +129,12 @@ fun TransactionsCardList(
             items(transactions) { transaction ->
                 TransactionCard(
                     transactionModel = transaction,
+                    onCardTap = {
+                        onCardTap.invoke(transaction)
+                    },
                     onDelete = {
                         transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type)
+                            onDelete.invoke(id, transaction.type!!)
                         }
                     }
                 )
@@ -264,5 +278,6 @@ suspend fun handleSnackBar(
 
 enum class SnackBarActionType {
     ADD,
+    EDIT,
     DELETE;
 }

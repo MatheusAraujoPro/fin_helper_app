@@ -39,12 +39,18 @@ class SummaryViewModel @Inject constructor(
 
             SummaryScreenAction.GetTransactions -> getTransactions()
             SummaryScreenAction.ShouldShowBottomSheet -> shouldShowBottomSheet()
+            SummaryScreenAction.ShouldShowEditBottomSheet -> shouldShowEditBottomSheet()
         }
     }
 
     private fun shouldShowBottomSheet() {
         val showBottomSheet = _state.value.shouldShowBottomSheet
         _state.value = _state.value.copy(shouldShowBottomSheet = showBottomSheet.not())
+    }
+
+    private fun shouldShowEditBottomSheet() {
+        val showBottomSheet = _state.value.shouldShowEditBottomSheet
+        _state.value = _state.value.copy(shouldShowEditBottomSheet = showBottomSheet.not())
     }
 
     private fun getTransactions() {
@@ -124,7 +130,8 @@ class SummaryViewModel @Inject constructor(
             ),
             onSuccess = {
                 _state.value = _state.value.copy(
-                    isLoading = false
+                    isLoading = false,
+                    shouldShowEditBottomSheet = _state.value.shouldShowEditBottomSheet.not()
                 )
                 getTransactions()
             }
@@ -133,7 +140,7 @@ class SummaryViewModel @Inject constructor(
 
     private fun segmentValuesPerIncomeType(transactionsList: List<TransactionModel>) {
         val nubankTotal =
-            transactionsList.filter { it.incomeType == IncomeType.NUBANK }.sumOf { it.value }
+            transactionsList.filter { it.incomeType == IncomeType.NUBANK }.sumOf { it.value!! }
 
         val genialTotal =
             transactionsList.filter { it.incomeType == IncomeType.GENIAL }
@@ -167,5 +174,10 @@ class SummaryViewModel @Inject constructor(
                 )
             )
         )
+    }
+
+    override fun onCleared() {
+        _state.value = SummaryScreenState()
+        super.onCleared()
     }
 }

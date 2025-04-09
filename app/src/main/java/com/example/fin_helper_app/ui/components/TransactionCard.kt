@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun TransactionCard(
     transactionModel: TransactionModel,
+    onCardTap: () -> Unit,
     onDelete: () -> Unit
 ) {
     SwipeToDeleteContainer(
@@ -71,6 +73,9 @@ fun TransactionCard(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        onCardTap.invoke()
+                    }
 
             ) {
                 CardContent(
@@ -272,6 +277,7 @@ fun TransactionCardPreview() {
                 incomeType = IncomeType.NUBANK,
                 createdAt = "12/03/2025"
             ),
+            onCardTap = {},
             onDelete = {}
 
         )
@@ -284,6 +290,7 @@ fun TransactionCardPreview() {
                 incomeType = IncomeType.GENIAL,
                 createdAt = "12/03/2025"
             ),
+            onCardTap = {},
             onDelete = {}
         )
         Spacer(modifier = Modifier.height(8.dp))

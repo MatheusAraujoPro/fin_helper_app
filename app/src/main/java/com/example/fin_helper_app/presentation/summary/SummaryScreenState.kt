@@ -10,4 +10,5 @@ data class SummaryScreenState(
     val shouldShowBottomSheet: Boolean = false,
     val headerCardTypeMap: Map<HeaderCardType, Double> = mapOf(),
     val error: Throwable? = null,
+    val shouldShowEditBottomSheet: Boolean = false,
 )
