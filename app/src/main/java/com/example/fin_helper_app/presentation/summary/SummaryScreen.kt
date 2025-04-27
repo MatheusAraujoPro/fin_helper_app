@@ -136,6 +136,7 @@ fun SummaryScreen(viewModel: SummaryViewModel) {
                                 onActionClick = {
                                     action(SummaryScreenAction.SaveTransaction(model = it))
                                     keyboardController?.hide()
+                                    filteredTransactions.clear()
                                     scope.launch {
                                         addBottomSheetState.hide()
                                         delay(500L)
