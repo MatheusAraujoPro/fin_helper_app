@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,10 @@ plugins {
     id("com.google.dagger.hilt.android")
 
 }
+
+val keystoreFile = project.rootProject.file("local.properties")
+val properties = Properties()
+properties.load(keystoreFile.inputStream())
 
 android {
     namespace = "com.example.fin_helper_app"
@@ -23,6 +29,14 @@ android {
             useSupportLibrary = true
         }
     }
+    signingConfigs {
+        register("release") {
+            storeFile = File(properties.getProperty("keystorelocation") ?: "")
+            storePassword = properties.getProperty("keystorepass")
+            keyAlias = properties.getProperty("keystorealias")
+            keyPassword = properties.getProperty("keypassword")
+        }
+    }
 
     buildTypes {
         release {
@@ -31,8 +45,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
