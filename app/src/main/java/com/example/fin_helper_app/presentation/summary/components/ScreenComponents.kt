@@ -31,13 +31,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.fin_helper_app.R
 import com.example.fin_helper_app.domain.enums.IncomeType
 import com.example.fin_helper_app.domain.enums.Language
@@ -104,6 +109,7 @@ fun BackgroundWrapper(
 fun TransactionsCardList(
     transactions: List<TransactionModel>,
     filteredTransactions: List<TransactionModel>,
+    searchInputFieldText: String,
     language: Language,
     onCardTap: (transaction: TransactionModel) -> Unit,
     onDelete: (transactionId: Long, transactionType: TransactionType) -> Unit
@@ -111,39 +117,51 @@ fun TransactionsCardList(
     LazyColumn(
         modifier = Modifier.padding(vertical = 16.dp)
     ) {
-        if (filteredTransactions.isNotEmpty())
-            items(filteredTransactions) { transaction ->
-                TransactionCard(
-                    transactionModel = transaction,
-                    language = language,
-                    onCardTap = {
-                        onCardTap.invoke(transaction)
+        when {
+            searchInputFieldText.isNotEmpty() && filteredTransactions.isEmpty() -> {
+                item {
+                    EmptyState()
+                }
+            }
 
-                    },
-                    onDelete = {
-                        transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type)
+            filteredTransactions.isNotEmpty() || searchInputFieldText.isNotEmpty() -> {
+                items(filteredTransactions) { transaction ->
+                    TransactionCard(
+                        transactionModel = transaction,
+                        language = language,
+                        onCardTap = {
+                            onCardTap.invoke(transaction)
+                        },
+                        onDelete = {
+                            transaction.id?.let { id ->
+                                onDelete.invoke(id, transaction.type)
+                            }
                         }
-                    }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
-        else
-            items(transactions) { transaction ->
-                TransactionCard(
-                    transactionModel = transaction,
-                    language = language,
-                    onCardTap = {
-                        onCardTap.invoke(transaction)
-                    },
-                    onDelete = {
-                        transaction.id?.let { id ->
-                            onDelete.invoke(id, transaction.type)
+
+            searchInputFieldText.isEmpty() && filteredTransactions.isEmpty() -> {
+                items(transactions) { transaction ->
+                    TransactionCard(
+                        transactionModel = transaction,
+                        language = language,
+                        onCardTap = {
+                            onCardTap.invoke(transaction)
+                        },
+                        onDelete = {
+                            transaction.id?.let { id ->
+                                onDelete.invoke(id, transaction.type)
+                            }
                         }
-                    }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
+
+            else -> {}
+        }
     }
 }
 
@@ -260,6 +278,33 @@ fun decideColor(description: String): Color {
     return when (description) {
         stringResource(R.string.nubank_balance) -> MaterialTheme.colorScheme.primary
         else -> customBackground
+    }
+}
+
+@Composable
+fun EmptyState() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(46.dp),
+
+        ) {
+        Spacer(modifier = Modifier.height(46.dp))
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.wallet),
+            contentDescription = null,
+            tint = ignitedMidGreen,
+            modifier = Modifier
+                .size(80.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+
+        Text(
+            text = stringResource(R.string.transaction_not_found),
+            color = Color.White,
+            fontSize = 20.sp,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
